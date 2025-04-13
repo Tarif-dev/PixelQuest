@@ -119,30 +119,35 @@ export const updateParticleSystem = (
   deltaTime: number
 ): ParticleSystem => {
   const currentTime = Date.now();
+  interface UpdatedVelocity {
+    x: number;
+    y: number;
+  }
+
   const updatedParticles = system.particles
-    .filter(particle => {
-      const age = currentTime - particle.creationTime;
+    .filter((particle: ParticleEffect) => {
+      const age: number = currentTime - particle.creationTime;
       return age < particle.lifespan;
     })
-    .map(particle => {
-      const age = currentTime - particle.creationTime;
-      const lifePercent = age / particle.lifespan;
+    .map((particle: ParticleEffect) => {
+      const age: number = currentTime - particle.creationTime;
+      const lifePercent: number = age / particle.lifespan;
       
       // Update velocity with gravity
-      const updatedVelocity = {
+      const updatedVelocity: UpdatedVelocity = {
         x: particle.velocity.x,
         y: particle.velocity.y + particle.gravity * deltaTime,
       };
       
       // Update position
-      const updatedX = particle.x + updatedVelocity.x * deltaTime;
-      const updatedY = particle.y + updatedVelocity.y * deltaTime;
+      const updatedX: number = particle.x + updatedVelocity.x * deltaTime;
+      const updatedY: number = particle.y + updatedVelocity.y * deltaTime;
       
       // Calculate opacity based on life percent
-      const opacity = particle.fadeOut ? 1 - lifePercent : 1;
+      const opacity: number = particle.fadeOut ? 1 - lifePercent : 1;
       
       // Calculate size (optional: particles can shrink over time)
-      const size = particle.size * (1 - lifePercent * 0.5);
+      const size: number = particle.size * (1 - lifePercent * 0.5);
       
       return {
         ...particle,
