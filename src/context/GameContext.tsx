@@ -26,6 +26,7 @@ interface GameState {
   setHealth: (health: number) => void;
   loading: boolean;
   setLoading: (loading: boolean) => void;
+  hasNextLevel: boolean;
   initGame: () => void;
   startGame: () => void;
   pauseGame: () => void;
@@ -64,6 +65,8 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [level, setLevel] = useState(1);
   const [health, setHealth] = useState(100);
   const [loading, setLoading] = useState(true);
+  // Initialize hasNextLevel - assuming we have 3 levels in the game
+  const hasNextLevel = level < 3; // Change this number based on your total number of levels
 
   const initGame = useCallback(() => {
     setLoading(true);
@@ -235,6 +238,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         setHealth,
         loading,
         setLoading,
+        hasNextLevel,
         initGame,
         startGame,
         pauseGame,

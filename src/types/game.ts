@@ -5,6 +5,36 @@ export type GameStatus =
   | "gameOver"
   | "levelComplete";
 
+// Add the missing types that collision.ts needs
+export interface Bounds {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface GameObject {
+  id: string;
+  bounds: Bounds;
+  velocity?: {
+    x: number;
+    y: number;
+  };
+}
+
+export interface PlayerState {
+  bounds: Bounds;
+  velocity: {
+    x: number;
+    y: number;
+  };
+  health: number;
+  isGrounded: boolean;
+  invulnerableUntil: number;
+}
+
+export type PlatformType = "normal" | "moving" | "falling" | "bouncy";
+
 export interface Player {
   x: number;
   y: number;
