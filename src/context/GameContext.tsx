@@ -11,7 +11,7 @@ interface GameState {
   gameStatus: GameStatus;
   setGameStatus: (status: GameStatus) => void;
   player: Player;
-  setPlayer: (player: Player) => void;
+  setPlayer: (player: Player | ((prev: Player) => Player)) => void;
   world: World;
   setWorld: (world: World) => void;
   collectibles: Collectible[];
@@ -34,7 +34,7 @@ interface GameState {
   levelComplete: () => void;
 }
 
-const GameContext = createContext<GameState | undefined>(undefined);
+export const GameContext = createContext<GameState | undefined>(undefined);
 
 export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [gameStatus, setGameStatus] = useState<GameStatus>("menu");

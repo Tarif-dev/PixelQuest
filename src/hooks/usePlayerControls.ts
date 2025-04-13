@@ -1,17 +1,24 @@
 import { useEffect } from 'react';
 import { useGameState } from './useGameState';
+import { GameStatus, Player } from '../types/game';
 
-export const usePlayerControls = () => {
+interface KeyState {
+  left: boolean;
+  right: boolean;
+  jump: boolean;
+}
+
+export const usePlayerControls = (): void => {
   const { gameStatus, player, setPlayer } = useGameState();
   
   useEffect(() => {
-    const keys = {
+    const keys: KeyState = {
       left: false,
       right: false,
       jump: false
     };
     
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent): void => {
       if (gameStatus !== 'playing') return;
       
       if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
@@ -27,7 +34,7 @@ export const usePlayerControls = () => {
       updatePlayerVelocity();
     };
     
-    const handleKeyUp = (e: KeyboardEvent) => {
+    const handleKeyUp = (e: KeyboardEvent): void => {
       if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
         keys.left = false;
       }
@@ -41,7 +48,7 @@ export const usePlayerControls = () => {
       updatePlayerVelocity();
     };
     
-    const updatePlayerVelocity = () => {
+    const updatePlayerVelocity = (): void => {
       // Only update if we're playing
       if (gameStatus !== 'playing') return;
       
@@ -52,8 +59,8 @@ export const usePlayerControls = () => {
       if (keys.left) newVelocityX -= moveSpeed;
       if (keys.right) newVelocityX += moveSpeed;
       
-      let newState = 'idle';
-      let newDirection = player.direction;
+      let newState: Player['state'] = 'idle';
+      let newDirection: Player['direction'] = player.direction;
       
       if (newVelocityX < 0) {
         newState = 'running';
@@ -67,7 +74,7 @@ export const usePlayerControls = () => {
         newState = 'jumping';
       }
       
-      setPlayer(prev => ({
+      setPlayer((prev: Player) => ({
         ...prev,
         velocityX: newVelocityX,
         velocityY: keys.jump && !prev.isJumping ? jumpForce : prev.velocityY,
@@ -78,7 +85,7 @@ export const usePlayerControls = () => {
     };
     
     // Add touch controls for mobile
-    const handleTouchStart = (e: TouchEvent) => {
+    const handleTouchStart = (e: TouchEvent): void => {
       const touch = e.touches[0];
       const screenWidth = window.innerWidth;
       
@@ -94,7 +101,7 @@ export const usePlayerControls = () => {
       updatePlayerVelocity();
     };
     
-    const handleTouchEnd = () => {
+    const handleTouchEnd = (): void => {
       keys.left = false;
       keys.right = false;
       keys.jump = false;
