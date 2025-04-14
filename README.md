@@ -1,6 +1,6 @@
 # RetroQuest - An Epic Platformer Adventure
 
-![RetroQuest Logo](logo-path)
+![RetroQuest Logo](./public/assets/sprites/retroquest-logo.svg)
 
 ## Overview
 
