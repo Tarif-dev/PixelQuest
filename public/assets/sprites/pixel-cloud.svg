@@ -1,0 +1,45 @@
+<svg width="180" height="80" viewBox="0 0 180 80" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .pixel {
+      shape-rendering: crispEdges;
+    }
+  </style>
+  <!-- Pixel Cloud SVG -->
+  <g class="pixel">
+    <!-- Main Cloud Body -->
+    <rect x="30" y="40" width="120" height="20" fill="#FFFFFF" />
+    <rect x="20" y="30" width="140" height="20" fill="#FFFFFF" />
+    <rect x="10" y="20" width="160" height="20" fill="#FFFFFF" />
+    
+    <!-- Cloud Bumps -->
+    <rect x="30" y="10" width="20" height="10" fill="#FFFFFF" />
+    <rect x="70" y="10" width="20" height="10" fill="#FFFFFF" />
+    <rect x="110" y="10" width="20" height="10" fill="#FFFFFF" />
+    <rect x="150" y="10" width="20" height="10" fill="#FFFFFF" />
+    
+    <!-- Cloud Bottom -->
+    <rect x="40" y="50" width="20" height="10" fill="#FFFFFF" />
+    <rect x="80" y="50" width="20" height="10" fill="#FFFFFF" />
+    <rect x="120" y="50" width="20" height="10" fill="#FFFFFF" />
+    
+    <!-- Shading -->
+    <rect x="30" y="40" width="10" height="10" fill="#F0F0F0" />
+    <rect x="60" y="40" width="10" height="10" fill="#F0F0F0" />
+    <rect x="90" y="40" width="10" height="10" fill="#F0F0F0" />
+    <rect x="120" y="40" width="10" height="10" fill="#F0F0F0" />
+    <rect x="150" y="40" width="10" height="10" fill="#F0F0F0" />
+    
+    <rect x="20" y="30" width="10" height="10" fill="#F0F0F0" />
+    <rect x="50" y="30" width="10" height="10" fill="#F0F0F0" />
+    <rect x="80" y="30" width="10" height="10" fill="#F0F0F0" />
+    <rect x="110" y="30" width="10" height="10" fill="#F0F0F0" />
+    <rect x="140" y="30" width="10" height="10" fill="#F0F0F0" />
+    
+    <rect x="10" y="20" width="10" height="10" fill="#F0F0F0" />
+    <rect x="40" y="20" width="10" height="10" fill="#F0F0F0" />
+    <rect x="70" y="20" width="10" height="10" fill="#F0F0F0" />
+    <rect x="100" y="20" width="10" height="10" fill="#F0F0F0" />
+    <rect x="130" y="20" width="10" height="10" fill="#F0F0F0" />
+    <rect x="160" y="20" width="10" height="10" fill="#F0F0F0" />
+  </g>
+</svg>

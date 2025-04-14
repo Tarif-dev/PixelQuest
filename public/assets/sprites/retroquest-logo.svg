@@ -1,0 +1,98 @@
+<svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .pixel { shape-rendering: crispEdges; }
+  </style>
+  <!-- RetroQuest Logo SVG -->
+  <g class="pixel">
+    <!-- Background glow effect -->
+    <ellipse cx="200" cy="100" rx="180" ry="70" fill="url(#logoGlow)" opacity="0.6"/>
+    
+    <!-- RETRO text -->
+    <g transform="translate(50, 60)">
+      <!-- R -->
+      <rect x="0" y="0" width="40" height="10" fill="#5d3fe8" />
+      <rect x="0" y="10" width="10" height="40" fill="#5d3fe8" />
+      <rect x="30" y="10" width="10" height="20" fill="#5d3fe8" />
+      <rect x="10" y="30" width="20" height="10" fill="#5d3fe8" />
+      <rect x="30" y="40" width="10" height="10" fill="#5d3fe8" />
+      
+      <!-- E -->
+      <rect x="50" y="0" width="40" height="10" fill="#5d3fe8" />
+      <rect x="50" y="10" width="10" height="40" fill="#5d3fe8" />
+      <rect x="60" y="20" width="20" height="10" fill="#5d3fe8" />
+      <rect x="60" y="40" width="30" height="10" fill="#5d3fe8" />
+      
+      <!-- T -->
+      <rect x="100" y="0" width="40" height="10" fill="#5d3fe8" />
+      <rect x="115" y="10" width="10" height="40" fill="#5d3fe8" />
+      
+      <!-- R -->
+      <rect x="150" y="0" width="40" height="10" fill="#5d3fe8" />
+      <rect x="150" y="10" width="10" height="40" fill="#5d3fe8" />
+      <rect x="180" y="10" width="10" height="20" fill="#5d3fe8" />
+      <rect x="160" y="30" width="20" height="10" fill="#5d3fe8" />
+      <rect x="180" y="40" width="10" height="10" fill="#5d3fe8" />
+      
+      <!-- O -->
+      <rect x="200" y="0" width="40" height="10" fill="#5d3fe8" />
+      <rect x="200" y="10" width="10" height="30" fill="#5d3fe8" />
+      <rect x="230" y="10" width="10" height="30" fill="#5d3fe8" />
+      <rect x="200" y="40" width="40" height="10" fill="#5d3fe8" />
+    </g>
+    
+    <!-- QUEST text -->
+    <g transform="translate(75, 110)">
+      <!-- Q -->
+      <rect x="0" y="0" width="40" height="10" fill="#ff8a2b" />
+      <rect x="0" y="10" width="10" height="30" fill="#ff8a2b" />
+      <rect x="30" y="10" width="10" height="40" fill="#ff8a2b" />
+      <rect x="10" y="40" width="20" height="10" fill="#ff8a2b" />
+      <rect x="20" y="30" width="10" height="10" fill="#ff8a2b" />
+      
+      <!-- U -->
+      <rect x="50" y="0" width="10" height="40" fill="#ff8a2b" />
+      <rect x="80" y="0" width="10" height="40" fill="#ff8a2b" />
+      <rect x="60" y="40" width="20" height="10" fill="#ff8a2b" />
+      
+      <!-- E -->
+      <rect x="100" y="0" width="40" height="10" fill="#ff8a2b" />
+      <rect x="100" y="10" width="10" height="40" fill="#ff8a2b" />
+      <rect x="110" y="20" width="20" height="10" fill="#ff8a2b" />
+      <rect x="110" y="40" width="30" height="10" fill="#ff8a2b" />
+      
+      <!-- S -->
+      <rect x="150" y="0" width="40" height="10" fill="#ff8a2b" />
+      <rect x="150" y="10" width="10" height="10" fill="#ff8a2b" />
+      <rect x="150" y="20" width="40" height="10" fill="#ff8a2b" />
+      <rect x="180" y="30" width="10" height="10" fill="#ff8a2b" />
+      <rect x="150" y="40" width="40" height="10" fill="#ff8a2b" />
+      
+      <!-- T -->
+      <rect x="200" y="0" width="40" height="10" fill="#ff8a2b" />
+      <rect x="215" y="10" width="10" height="40" fill="#ff8a2b" />
+    </g>
+    
+    <!-- Pixel accents -->
+    <rect x="60" y="35" width="10" height="10" fill="#41a6f6" />
+    <rect x="330" y="35" width="10" height="10" fill="#41a6f6" />
+    <rect x="60" y="155" width="10" height="10" fill="#41a6f6" />
+    <rect x="330" y="155" width="10" height="10" fill="#41a6f6" />
+    
+    <!-- Controller icon -->
+    <g transform="translate(340, 90)">
+      <rect x="0" y="0" width="40" height="20" fill="#333333" />
+      <rect x="10" y="20" width="20" height="10" fill="#333333" />
+      <rect x="5" y="5" width="10" height="10" fill="#ff8a2b" />
+      <rect x="25" y="5" width="10" height="10" fill="#5d3fe8" />
+    </g>
+  </g>
+  
+  <!-- Gradient definitions -->
+  <defs>
+    <radialGradient id="logoGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#5d3fe8" stop-opacity="0.3" />
+      <stop offset="60%" stop-color="#ff8a2b" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+</svg>

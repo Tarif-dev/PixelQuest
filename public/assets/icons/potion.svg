@@ -1,0 +1,33 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .pixel { shape-rendering: crispEdges; }
+  </style>
+  <!-- Potion Icon SVG -->
+  <g class="pixel">
+    <!-- Potion bottle -->
+    <path d="M12,26 L20,26 L20,14 L12,14 Z" fill="#9c59d1" />
+    
+    <!-- Bottle neck -->
+    <path d="M14,14 L18,14 L18,10 L14,10 Z" fill="#9c59d1" />
+    
+    <!-- Bottle cap -->
+    <path d="M13,10 L19,10 L19,8 L13,8 Z" fill="#444444" />
+    
+    <!-- Liquid inside -->
+    <path d="M13,24 L19,24 L19,16 L13,16 Z" fill="#d767ff" />
+    
+    <!-- Bubbles -->
+    <circle cx="15" cy="18" r="1" fill="#e8b3ff" />
+    <circle cx="17" cy="20" r="1" fill="#e8b3ff" />
+    <circle cx="16" cy="22" r="1" fill="#e8b3ff" />
+    
+    <!-- Highlights -->
+    <path d="M12,14 L14,14 L14,26 L12,26 Z" fill="#8a42c0" />
+    <path d="M14,10 L15,10 L15,14 L14,14 Z" fill="#8a42c0" />
+    <path d="M13,8 L15,8 L15,10 L13,10 Z" fill="#333333" />
+    
+    <!-- Glow effect -->
+    <path d="M10,23 L10,26 L12,26 L14,26 Z" fill="#bd8ee0" opacity="0.4" />
+    <path d="M20,23 L20,26 L22,26 L18,26 Z" fill="#bd8ee0" opacity="0.4" />
+  </g>
+</svg>

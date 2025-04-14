@@ -1,0 +1,22 @@
+<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .pixel { shape-rendering: crispEdges; }
+  </style>
+  <!-- Power-up Star SVG -->
+  <g class="pixel">
+    <!-- Star Shape -->
+    <path d="M24,5 L29,19 L45,19 L32,28 L37,42 L24,33 L11,42 L16,28 L3,19 L19,19 Z" fill="#ffcd75" />
+    
+    <!-- Inner Glow -->
+    <path d="M24,10 L27.5,20 L39,20 L29.5,26.5 L33,36.5 L24,30 L15,36.5 L18.5,26.5 L9,20 L20.5,20 Z" fill="#ffe6b3" />
+    
+    <!-- Center -->
+    <circle cx="24" cy="24" r="4" fill="#ffffff" />
+    
+    <!-- Sparkle effect -->
+    <rect x="24" y="8" width="2" height="2" fill="white" />
+    <rect x="38" y="19" width="2" height="2" fill="white" />
+    <rect x="10" y="19" width="2" height="2" fill="white" />
+    <rect x="24" y="38" width="2" height="2" fill="white" />
+  </g>
+</svg>

@@ -1,0 +1,28 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .pixel { shape-rendering: crispEdges; }
+  </style>
+  <!-- Controller Icon SVG -->
+  <g class="pixel">
+    <!-- Controller body -->
+    <path d="M4,10 L28,10 L28,22 L4,22 Z" fill="#333333" />
+    <path d="M4,10 L4,22 L10,26 L22,26 L28,22 L28,10 Z" fill="#333333" />
+    
+    <!-- Controller rounded edges -->
+    <path d="M10,8 L22,8 L28,10 L28,12 L4,12 L4,10 Z" fill="#444444" />
+    
+    <!-- D-pad -->
+    <rect x="7" y="14" width="8" height="4" fill="#222222" />
+    <rect x="9" y="12" width="4" height="8" fill="#222222" />
+    
+    <!-- Buttons -->
+    <circle cx="23" cy="13" r="2" fill="#5d3fe8" />
+    <circle cx="25" cy="16" r="2" fill="#ff8a2b" />
+    <circle cx="21" cy="16" r="2" fill="#41a6f6" />
+    <circle cx="23" cy="19" r="2" fill="#73ef67" />
+    
+    <!-- Controller highlights -->
+    <path d="M4,10 L10,8 L10,10 L4,12 Z" fill="#222222" />
+    <path d="M22,8 L28,10 L28,12 L22,10 Z" fill="#222222" />
+  </g>
+</svg>

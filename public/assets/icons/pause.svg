@@ -1,0 +1,24 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .pixel { shape-rendering: crispEdges; }
+  </style>
+  <!-- Pause Icon SVG -->
+  <g class="pixel">
+    <!-- Pause button background -->
+    <rect x="4" y="4" width="24" height="24" rx="2" ry="2" fill="#333333" />
+    
+    <!-- Pause button border -->
+    <rect x="4" y="4" width="24" height="2" fill="#444444" />
+    <rect x="4" y="4" width="2" height="24" fill="#444444" />
+    <rect x="4" y="26" width="24" height="2" fill="#222222" />
+    <rect x="26" y="4" width="2" height="24" fill="#222222" />
+    
+    <!-- Pause bars -->
+    <rect x="10" y="8" width="4" height="16" fill="#41a6f6" />
+    <rect x="18" y="8" width="4" height="16" fill="#41a6f6" />
+    
+    <!-- Highlight effects -->
+    <rect x="10" y="8" width="4" height="2" fill="#79c2ff" />
+    <rect x="18" y="8" width="4" height="2" fill="#79c2ff" />
+  </g>
+</svg>

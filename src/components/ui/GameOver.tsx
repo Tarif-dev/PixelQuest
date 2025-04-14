@@ -1,7 +1,8 @@
 // GameOver.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useGameState } from "../../hooks/useGameState";
 import { useRouter } from "next/router";
+import { motion, AnimatePresence } from "framer-motion";
 
 const GameOver: React.FC = () => {
   const gameState = useGameState();
@@ -12,12 +13,29 @@ const GameOver: React.FC = () => {
   const [highScore, setHighScore] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
+  const [animationPhase, setAnimationPhase] = useState(0);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [statEffect, setStatEffect] = useState({
+    gems: 0,
+    enemies: 0,
+    time: 0,
+  });
 
+  // Handle game over state changes
   useEffect(() => {
     if (gameState.gameStatus === "gameOver") {
       setVisible(true);
       setFinalScore(gameState.score);
       setAnimationComplete(false);
+      setAnimationPhase(0);
+
+      // Play game over music
+      if (audioRef.current) {
+        audioRef.current.volume = 0.4;
+        audioRef.current
+          .play()
+          .catch((e) => console.error("Audio play failed:", e));
+      }
 
       // Check for high score
       const storedHighScore = localStorage.getItem("retroquest_highscore")
@@ -41,6 +59,12 @@ const GameOver: React.FC = () => {
         if (currentScore >= gameState.score) {
           clearInterval(interval);
           setAnimationComplete(true);
+
+          // Start the additional animations
+          setTimeout(() => setAnimationPhase(1), 400);
+          setTimeout(() => setAnimationPhase(2), 800);
+          setTimeout(() => setAnimationPhase(3), 1200);
+
           return;
         }
 
@@ -49,9 +73,17 @@ const GameOver: React.FC = () => {
         setScoreAnimation(currentScore);
       }, 50);
 
+      // Set some mock stats for the game session
+      setStatEffect({
+        gems: Math.floor(gameState.score / 50), // Rough estimate of gems collected
+        enemies: Math.floor(gameState.score / 120), // Rough estimate of enemies defeated
+        time: Math.floor(60 + gameState.score / 20), // Rough estimate of time played in seconds
+      });
+
       return () => clearInterval(interval);
     } else {
       setVisible(false);
+      setAnimationPhase(0);
     }
   }, [gameState.gameStatus, gameState.score]);
 
@@ -80,219 +112,537 @@ const GameOver: React.FC = () => {
     router.push("/");
   };
 
+  // Format time in MM:SS format
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  };
+
   return (
-    <div
+    <motion.div
       className="game-over-container"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
       style={{
         position: "absolute",
         top: 0,
         left: 0,
         width: "100%",
         height: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.8)",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         zIndex: 100,
-        color: "#FFFFFF",
+        backgroundColor: "rgba(10, 10, 25, 0.8)",
+        perspective: "1000px",
         fontFamily: '"Press Start 2P", monospace',
-        animation: "fadeIn 0.5s ease-in-out",
       }}
     >
-      <div
-        className="game-over-content"
+      {/* Background effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Animated falling pixels */}
+        {Array.from({ length: 20 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `-20px`,
+              backgroundColor: i % 2 === 0 ? "#FF4444" : "#880000",
+              opacity: 0.7,
+            }}
+            animate={{
+              y: ["0vh", "100vh"],
+              rotate: [0, 360],
+            }}
+            transition={{
+              duration: 2 + Math.random() * 3,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+              ease: "linear",
+            }}
+          />
+        ))}
+
+        {/* Radial glow */}
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(255,0,0,0.2) 0%, transparent 70%)",
+          }}
+          animate={{
+            opacity: [0.5, 0.3, 0.5],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+        />
+
+        {/* Grid lines effect */}
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage:
+              "linear-gradient(#FF4444 0.5px, transparent 0.5px), linear-gradient(90deg, #FF4444 0.5px, transparent 0.5px)",
+            backgroundSize: "50px 50px",
+          }}
+        />
+      </div>
+
+      {/* Main content card */}
+      <motion.div
+        className="game-over-content relative"
+        initial={{ rotateX: 90, scale: 0.8 }}
+        animate={{ rotateX: 0, scale: 1 }}
+        transition={{
+          type: "spring",
+          stiffness: 200,
+          damping: 20,
+          delay: 0.2,
+        }}
         style={{
           backgroundColor: "rgba(20, 20, 40, 0.9)",
-          padding: "2rem",
+          padding: "2.5rem",
           borderRadius: "8px",
           border: "4px solid #FF4444",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: "1.5rem",
-          maxWidth: "400px",
-          width: "80%",
-          boxShadow: "0 0 20px rgba(255, 0, 0, 0.5)",
+          maxWidth: "450px",
+          width: "90%",
+          boxShadow:
+            "0 0 30px rgba(255, 0, 0, 0.5), 0 0 60px rgba(255, 0, 0, 0.3)",
+          overflow: "hidden",
+          transform: "perspective(1000px)",
         }}
       >
-        <h1
+        {/* 3D Card - Top highlight */}
+        <div className="absolute left-0 right-0 h-[2px] top-0 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
+
+        {/* Game Over Title with glowing effect */}
+        <motion.h1
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="game-over-title relative z-10 text-center"
           style={{
-            fontSize: "2.5rem",
+            fontSize: "3rem",
             color: "#FF4444",
-            textShadow: "3px 3px 0px #000000",
+            textShadow:
+              "3px 3px 0 #000, 0 0 10px rgba(255, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.4)",
             margin: 0,
-            textAlign: "center",
-            letterSpacing: "2px",
+            letterSpacing: "4px",
+            position: "relative",
           }}
         >
           GAME OVER
-        </h1>
+          {/* Animated glitch effect */}
+          <motion.div
+            className="absolute inset-0 text-center"
+            style={{
+              color: "#ff99a8",
+              clipPath: "inset(0 0 0 0)",
+              filter: "blur(1px)",
+            }}
+            animate={{
+              x: ["-2px", "2px", "-2px"],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 0.3,
+              repeat: Infinity,
+              repeatType: "mirror",
+            }}
+          >
+            GAME OVER
+          </motion.div>
+        </motion.h1>
 
-        <div
-          className="score-container"
+        {/* Score Section with enhanced visuals */}
+        <motion.div
+          className="score-container relative"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
           style={{
-            marginTop: "1rem",
-            fontSize: "1.2rem",
-            textAlign: "center",
+            marginTop: "0.5rem",
             width: "100%",
+            padding: "1rem",
+            backgroundColor: "rgba(15, 15, 30, 0.7)",
+            borderRadius: "8px",
+            border: "2px solid rgba(255, 68, 68, 0.5)",
+            textAlign: "center",
+            position: "relative",
+            overflow: "hidden",
           }}
         >
-          <p style={{ marginBottom: "0.5rem" }}>YOUR SCORE</p>
-          <p
+          {/* Background shimmer effect */}
+          <motion.div
+            className="absolute inset-0 bg-white opacity-0"
+            animate={{
+              opacity: [0, 0.1, 0],
+              left: ["-100%", "100%"],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              repeatDelay: 1,
+            }}
+          />
+
+          <div className="score-label text-white text-sm opacity-80 mb-2 uppercase tracking-wider">
+            Your Score
+          </div>
+
+          <motion.div
+            className="score-value"
             style={{
-              fontSize: "2rem",
+              fontSize: "2.5rem",
               color: "#FFDD00",
-              textShadow: "2px 2px 0px #000000",
-              marginBottom: "1rem",
-              animation: animationComplete ? "pulse 1.5s infinite" : "none",
+              textShadow: "2px 2px 0 #000, 0 0 10px rgba(255, 221, 0, 0.6)",
+              marginBottom: "0.5rem",
+              fontWeight: "bold",
+            }}
+            animate={
+              animationComplete
+                ? {
+                    scale: [1, 1.05, 1],
+                    textShadow: [
+                      "2px 2px 0 #000, 0 0 10px rgba(255, 221, 0, 0.6)",
+                      "2px 2px 0 #000, 0 0 20px rgba(255, 221, 0, 0.9)",
+                      "2px 2px 0 #000, 0 0 10px rgba(255, 221, 0, 0.6)",
+                    ],
+                  }
+                : {}
+            }
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              repeatType: "reverse",
             }}
           >
             {scoreAnimation}
-          </p>
+          </motion.div>
 
-          {isNewHighScore && animationComplete && (
-            <div
-              className="new-highscore"
-              style={{
-                color: "#00FFAA",
-                animation: "bounce 0.5s ease-in-out",
-              }}
-            >
-              NEW HIGH SCORE!
-            </div>
-          )}
+          <AnimatePresence>
+            {isNewHighScore && animationComplete && (
+              <motion.div
+                className="new-highscore"
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 10,
+                }}
+                style={{
+                  color: "#00FFAA",
+                  fontSize: "1.1rem",
+                  marginTop: "0.5rem",
+                  textShadow: "2px 2px 0 #000, 0 0 10px rgba(0, 255, 170, 0.7)",
+                  letterSpacing: "1px",
+                  position: "relative",
+                }}
+              >
+                NEW HIGH SCORE!
+                {/* Sparkle effects around new high score */}
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-2 h-2 bg-white rounded-full"
+                    style={{
+                      left: `${25 * i}%`,
+                      top: i % 2 === 0 ? "-15px" : "30px",
+                    }}
+                    animate={{
+                      scale: [0, 1, 0],
+                      opacity: [0, 1, 0],
+                    }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      delay: i * 0.2,
+                    }}
+                  />
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {!isNewHighScore && (
-            <div
-              className="highscore"
-              style={{
-                fontSize: "0.8rem",
-                opacity: 0.8,
-                marginTop: "0.5rem",
-              }}
+            <motion.div
+              className="highscore text-white/60 text-sm mt-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7 }}
             >
               HIGH SCORE: {highScore}
-            </div>
+            </motion.div>
           )}
+        </motion.div>
 
-          <div
-            className="level-info"
+        {/* Game Stats Section - appears after score animation */}
+        <motion.div
+          className="stats-container w-full"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{
+            opacity: animationPhase >= 1 ? 1 : 0,
+            y: animationPhase >= 1 ? 0 : 20,
+          }}
+          transition={{ duration: 0.4 }}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "1rem",
+          }}
+        >
+          {/* Level */}
+          <motion.div
+            className="stat-card"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.8 }}
             style={{
-              fontSize: "0.8rem",
-              marginTop: "1rem",
-              opacity: 0.8,
+              padding: "1rem",
+              backgroundColor: "rgba(15, 15, 30, 0.6)",
+              borderRadius: "6px",
+              border: "2px solid rgba(102, 72, 255, 0.4)",
+              textAlign: "center",
+              boxShadow: "0 4px 0 rgba(0, 0, 0, 0.2)",
             }}
           >
-            LEVEL: {gameState.level}
-          </div>
-        </div>
+            <div className="stat-label text-white/60 text-xs mb-1">LEVEL</div>
+            <div className="stat-value text-[#6648FF] text-xl">
+              {gameState.level}
+            </div>
+          </motion.div>
 
-        <div
-          className="button-container"
+          {/* Gems Collected */}
+          <motion.div
+            className="stat-card"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.9 }}
+            style={{
+              padding: "1rem",
+              backgroundColor: "rgba(15, 15, 30, 0.6)",
+              borderRadius: "6px",
+              border: "2px solid rgba(0, 221, 255, 0.4)",
+              textAlign: "center",
+              boxShadow: "0 4px 0 rgba(0, 0, 0, 0.2)",
+            }}
+          >
+            <div className="stat-label text-white/60 text-xs mb-1">GEMS</div>
+            <div className="stat-value text-[#00DDFF] text-xl">
+              {statEffect.gems}
+            </div>
+          </motion.div>
+
+          {/* Time Played */}
+          <motion.div
+            className="stat-card"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 1.0 }}
+            style={{
+              padding: "1rem",
+              backgroundColor: "rgba(15, 15, 30, 0.6)",
+              borderRadius: "6px",
+              border: "2px solid rgba(255, 138, 43, 0.4)",
+              textAlign: "center",
+              boxShadow: "0 4px 0 rgba(0, 0, 0, 0.2)",
+            }}
+          >
+            <div className="stat-label text-white/60 text-xs mb-1">TIME</div>
+            <div className="stat-value text-[#FF8A2B] text-xl">
+              {formatTime(statEffect.time)}
+            </div>
+          </motion.div>
+
+          {/* Enemies Defeated */}
+          <motion.div
+            className="stat-card"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 1.1 }}
+            style={{
+              padding: "1rem",
+              backgroundColor: "rgba(15, 15, 30, 0.6)",
+              borderRadius: "6px",
+              border: "2px solid rgba(0, 255, 170, 0.4)",
+              textAlign: "center",
+              boxShadow: "0 4px 0 rgba(0, 0, 0, 0.2)",
+            }}
+          >
+            <div className="stat-label text-white/60 text-xs mb-1">ENEMIES</div>
+            <div className="stat-value text-[#00FFAA] text-xl">
+              {statEffect.enemies}
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Buttons Container with enhanced styling */}
+        <motion.div
+          className="buttons-container w-full"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{
+            opacity: animationPhase >= 2 ? 1 : 0,
+            y: animationPhase >= 2 ? 0 : 20,
+          }}
+          transition={{ duration: 0.4 }}
           style={{
             display: "flex",
             flexDirection: "column",
             gap: "1rem",
-            width: "100%",
-            marginTop: "1rem",
+            marginTop: "0.5rem",
           }}
         >
-          <button
+          <motion.button
             onClick={handleRestart}
+            className="game-button"
+            whileHover={{
+              y: -2,
+              boxShadow: "0 6px 0 #4428DD",
+              filter: "brightness(1.1)",
+            }}
+            whileTap={{
+              y: 4,
+              boxShadow: "0 0 0 #4428DD",
+              filter: "brightness(0.9)",
+            }}
             style={{
-              padding: "0.75rem 1.5rem",
+              padding: "1rem",
               fontSize: "1rem",
               backgroundColor: "#6648FF",
               color: "white",
               border: "none",
-              borderRadius: "4px",
+              borderRadius: "6px",
               cursor: "pointer",
               fontFamily: '"Press Start 2P", monospace',
               boxShadow: "0 4px 0 #4428DD",
-              transition: "transform 0.1s, box-shadow 0.1s",
+              transition: "all 0.1s",
               position: "relative",
-              outline: "none",
+              overflow: "hidden",
+              textShadow: "1px 1px 0 rgba(0,0,0,0.5)",
             }}
-            className="game-button"
           >
-            TRY AGAIN
-          </button>
+            {/* Button shine effect */}
+            <motion.div
+              className="absolute inset-0 bg-white opacity-0"
+              animate={{
+                opacity: [0, 0.3, 0],
+                left: ["-100%", "100%"],
+              }}
+              transition={{
+                duration: 1,
+                repeat: Infinity,
+                repeatDelay: 2,
+              }}
+            />
 
-          <button
+            <div className="flex items-center justify-center gap-2">
+              <span className="relative z-10">TRY AGAIN</span>
+              <motion.div
+                animate={{ rotate: [0, -10, 0, 10, 0] }}
+                transition={{
+                  duration: 0.5,
+                  repeat: Infinity,
+                  repeatDelay: 2,
+                }}
+                className="w-5 h-5 relative z-10"
+                style={{
+                  backgroundImage: "url('/assets/icons/controller.svg')",
+                  backgroundSize: "contain",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                }}
+              />
+            </div>
+          </motion.button>
+
+          <motion.button
             onClick={handleMainMenu}
+            className="game-button"
+            whileHover={{
+              y: -2,
+              boxShadow: "0 6px 0 #222",
+              filter: "brightness(1.1)",
+            }}
+            whileTap={{
+              y: 4,
+              boxShadow: "0 0 0 #222",
+              filter: "brightness(0.9)",
+            }}
             style={{
-              padding: "0.75rem 1.5rem",
+              padding: "1rem",
               fontSize: "1rem",
               backgroundColor: "#444",
               color: "white",
               border: "none",
-              borderRadius: "4px",
+              borderRadius: "6px",
               cursor: "pointer",
               fontFamily: '"Press Start 2P", monospace',
               boxShadow: "0 4px 0 #222",
-              transition: "transform 0.1s, box-shadow 0.1s",
+              transition: "all 0.1s",
               position: "relative",
-              outline: "none",
+              overflow: "hidden",
+              textShadow: "1px 1px 0 rgba(0,0,0,0.5)",
             }}
-            className="game-button"
           >
-            MAIN MENU
-          </button>
-        </div>
-      </div>
+            <div className="flex items-center justify-center gap-2">
+              <span className="relative z-10">MAIN MENU</span>
+              <motion.div
+                animate={{ y: [0, -2, 0] }}
+                transition={{
+                  duration: 0.5,
+                  repeat: Infinity,
+                  repeatDelay: 1.5,
+                }}
+                className="w-5 h-5 relative z-10"
+                style={{
+                  backgroundImage: "url('/assets/icons/selector.svg')",
+                  backgroundSize: "contain",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                }}
+              />
+            </div>
+          </motion.button>
+        </motion.div>
 
-      <style jsx>{`
-        .game-button:hover {
-          transform: translateY(2px);
-          box-shadow: 0 2px 0 currentColor;
-        }
-        .game-button:active {
-          transform: translateY(4px);
-          box-shadow: 0 0 0 currentColor;
-        }
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-        @keyframes pulse {
-          0% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.05);
-          }
-          100% {
-            transform: scale(1);
-          }
-        }
-        @keyframes bounce {
-          0% {
-            transform: scale(0.5);
-            opacity: 0;
-          }
-          50% {
-            transform: scale(1.2);
-          }
-          100% {
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
-        .new-highscore {
-          font-size: 1rem;
-          font-weight: bold;
-          color: #00ffaa;
-          margin-top: 0.5rem;
-          text-shadow: 2px 2px 0px #000000;
-          letter-spacing: 1px;
-        }
-      `}</style>
-    </div>
+        {/* Optional Tip / Hint */}
+        <motion.div
+          className="game-tip text-center mt-2 text-white/50 text-xs"
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: animationPhase >= 3 ? 1 : 0,
+          }}
+          transition={{ duration: 0.4 }}
+          style={{
+            maxWidth: "90%",
+            lineHeight: "1.4",
+          }}
+        >
+          TIP: Try collecting more gems and defeating enemies to increase your
+          score!
+        </motion.div>
+      </motion.div>
+
+      {/* Game over audio effect */}
+      <audio
+        ref={audioRef}
+        src="/sounds/game-over.mp3"
+        style={{ display: "none" }}
+      />
+    </motion.div>
   );
 };
 

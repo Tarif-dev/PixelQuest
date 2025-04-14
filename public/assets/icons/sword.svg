@@ -1,0 +1,27 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .pixel { shape-rendering: crispEdges; }
+  </style>
+  <!-- Sword Icon SVG -->
+  <g class="pixel">
+    <!-- Sword blade -->
+    <path d="M14,6 L18,6 L21,9 L21,16 L18,19 L14,19 L11,16 L11,9 Z" fill="#C0C0C0" />
+    
+    <!-- Sword handle -->
+    <rect x="14" y="19" width="4" height="8" fill="#8B4513" />
+    
+    <!-- Sword guard -->
+    <rect x="10" y="18" width="12" height="2" fill="#FFD700" />
+    
+    <!-- Blade highlight -->
+    <path d="M16,6 L18,6 L21,9 L21,16 L18,19 L16,19 Z" fill="#E0E0E0" />
+    
+    <!-- Blade edge -->
+    <path d="M14,6 L16,6 L16,19 L14,19 Z" fill="#A0A0A0" />
+    
+    <!-- Handle detail -->
+    <rect x="14" y="21" width="4" height="1" fill="#6B3100" />
+    <rect x="14" y="23" width="4" height="1" fill="#6B3100" />
+    <rect x="14" y="25" width="4" height="1" fill="#6B3100" />
+  </g>
+</svg>

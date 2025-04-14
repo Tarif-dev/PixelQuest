@@ -81,11 +81,10 @@ const LevelComplete: React.FC = () => {
   if (!visible) return null;
 
   const handleNextLevel = () => {
-    // Increase the level number
-    gameState.setLevel(gameState.level + 1);
-
+    // The current level number should already be updated in the levelComplete callback
+    // Initialize the next level (which was already set in the GameContext)
+    gameState.initLevel(gameState.level);
     // Start the game
-    gameState.initGame();
     gameState.startGame();
   };
 

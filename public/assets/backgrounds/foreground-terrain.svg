@@ -1,0 +1,59 @@
+<svg width="1200" height="200" viewBox="0 0 1200 200" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .pixel {
+      shape-rendering: crispEdges;
+    }
+  </style>
+  <!-- Foreground Terrain SVG -->
+  <g class="pixel">
+    <!-- Base Ground -->
+    <path d="M0,200 L0,100 L50,105 L100,95 L150,100 L200,90 L250,95 L300,85 L350,90 L400,80 L450,85 L500,75 L550,80 L600,70 L650,75 L700,65 L750,70 L800,60 L850,65 L900,55 L950,60 L1000,50 L1050,55 L1100,45 L1150,50 L1200,40 L1200,200 Z" fill="#2d1b2d" />
+    
+    <!-- Middle Ground Layer -->
+    <path d="M0,200 L0,120 L30,125 L60,115 L90,120 L120,110 L150,115 L180,105 L210,110 L240,100 L270,105 L300,95 L330,100 L360,90 L390,95 L420,85 L450,90 L480,80 L510,85 L540,75 L570,80 L600,70 L630,75 L660,65 L690,70 L720,60 L750,65 L780,55 L810,60 L840,50 L870,55 L900,45 L930,50 L960,40 L990,45 L1020,35 L1050,40 L1080,30 L1110,35 L1140,25 L1170,30 L1200,20 L1200,200 Z" fill="#41233c" />
+    
+    <!-- Top Ground Layer -->
+    <path d="M0,200 L0,140 L20,145 L40,135 L60,140 L80,130 L100,135 L120,125 L140,130 L160,120 L180,125 L200,115 L220,120 L240,110 L260,115 L280,105 L300,110 L320,100 L340,105 L360,95 L380,100 L400,90 L420,95 L440,85 L460,90 L480,80 L500,85 L520,75 L540,80 L560,70 L580,75 L600,65 L620,70 L640,60 L660,65 L680,55 L700,60 L720,50 L740,55 L760,45 L780,50 L800,40 L820,45 L840,35 L860,40 L880,30 L900,35 L920,25 L940,30 L960,20 L980,25 L1000,15 L1020,20 L1040,10 L1060,15 L1080,5 L1100,10 L1120,0 L1140,5 L1160,0 L1180,5 L1200,0 L1200,200 Z" fill="#562650" />
+    
+    <!-- Ground Details -->
+    <!-- Trees -->
+    <rect x="100" y="105" width="10" height="30" fill="#2a1a22" />
+    <path d="M85,105 L125,105 L105,75 Z" fill="#3b4e2d" />
+    <path d="M90,90 L120,90 L105,65 Z" fill="#4a613c" />
+    <path d="M95,75 L115,75 L105,55 Z" fill="#5a744b" />
+    
+    <rect x="300" y="85" width="10" height="25" fill="#2a1a22" />
+    <path d="M285,85 L325,85 L305,60 Z" fill="#3b4e2d" />
+    <path d="M290,70 L320,70 L305,50 Z" fill="#4a613c" />
+    <path d="M295,60 L315,60 L305,40 Z" fill="#5a744b" />
+    
+    <rect x="500" y="65" width="10" height="30" fill="#2a1a22" />
+    <path d="M485,65 L525,65 L505,35 Z" fill="#3b4e2d" />
+    <path d="M490,50 L520,50 L505,25 Z" fill="#4a613c" />
+    <path d="M495,40 L515,40 L505,15 Z" fill="#5a744b" />
+    
+    <rect x="700" y="45" width="10" height="25" fill="#2a1a22" />
+    <path d="M685,45 L725,45 L705,20 Z" fill="#3b4e2d" />
+    <path d="M690,35 L720,35 L705,10 Z" fill="#4a613c" />
+    <path d="M695,25 L715,25 L705,0 Z" fill="#5a744b" />
+    
+    <rect x="900" y="30" width="10" height="30" fill="#2a1a22" />
+    <path d="M885,30 L925,30 L905,0 Z" fill="#3b4e2d" />
+    <path d="M890,20 L920,20 L905,-10 Z" fill="#4a613c" />
+    
+    <!-- Bushes -->
+    <rect x="200" y="115" width="30" height="15" rx="7" ry="7" fill="#3b4e2d" />
+    <rect x="400" y="95" width="25" height="15" rx="7" ry="7" fill="#3b4e2d" />
+    <rect x="600" y="75" width="30" height="15" rx="7" ry="7" fill="#3b4e2d" />
+    <rect x="800" y="55" width="25" height="15" rx="7" ry="7" fill="#3b4e2d" />
+    <rect x="1000" y="25" width="30" height="15" rx="7" ry="7" fill="#3b4e2d" />
+    
+    <!-- Rocks -->
+    <path d="M150,130 L165,120 L180,130 Z" fill="#555555" />
+    <path d="M350,110 L370,95 L390,110 Z" fill="#666666" />
+    <path d="M550,90 L575,75 L590,90 Z" fill="#555555" />
+    <path d="M750,70 L770,55 L790,70 Z" fill="#666666" />
+    <path d="M950,50 L975,35 L990,50 Z" fill="#555555" />
+    <path d="M1150,25 L1165,10 L1180,25 Z" fill="#666666" />
+  </g>
+</svg>

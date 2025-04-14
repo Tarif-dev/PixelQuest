@@ -1,0 +1,19 @@
+<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .pixel { shape-rendering: crispEdges; }
+  </style>
+  <!-- Gem (Blue) SVG -->
+  <g class="pixel">
+    <!-- Gem Shape -->
+    <path d="M24,5 L38,20 L24,43 L10,20 Z" fill="#14379b" />
+    <path d="M24,5 L38,20 L24,33 L10,20 Z" fill="#41a6f6" />
+    
+    <!-- Highlights -->
+    <path d="M24,5 L26,20 L24,33 L22,20 Z" fill="#79c2ff" />
+    <path d="M14,15 L24,5 L26,20 Z" fill="#c4e3ff" />
+    
+    <!-- Sparkle effect -->
+    <rect x="18" y="12" width="2" height="2" fill="white" />
+    <rect x="28" y="22" width="2" height="2" fill="white" />
+  </g>
+</svg>
