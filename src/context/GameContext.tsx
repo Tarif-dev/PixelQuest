@@ -27,6 +27,8 @@ interface GameState {
   loading: boolean;
   setLoading: (loading: boolean) => void;
   hasNextLevel: boolean;
+  fps: number;
+  setFps: (fps: number) => void;
   initGame: () => void;
   startGame: () => void;
   pauseGame: () => void;
@@ -65,6 +67,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [level, setLevel] = useState(1);
   const [health, setHealth] = useState(100);
   const [loading, setLoading] = useState(true);
+  const [fps, setFps] = useState(60);
   // Initialize hasNextLevel - assuming we have 3 levels in the game
   const hasNextLevel = level < 3; // Change this number based on your total number of levels
 
@@ -239,6 +242,8 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         loading,
         setLoading,
         hasNextLevel,
+        fps,
+        setFps,
         initGame,
         startGame,
         pauseGame,

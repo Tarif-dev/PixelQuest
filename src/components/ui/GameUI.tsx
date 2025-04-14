@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { motion } from "framer-motion";
 import { useGameState } from "../../hooks/useGameState";
 import { usePlayerControls } from "../../hooks/usePlayerControls";
 import { Collectible } from "../../types/game";
+import { GameContext } from "../../context/GameContext";
 
 interface GameUIProps {
   onPause: () => void;
@@ -10,6 +11,9 @@ interface GameUIProps {
 
 const GameUI: React.FC<GameUIProps> = ({ onPause }) => {
   const { health, score, collectibles } = useGameState();
+  // Get fps from context instead of creating a new useGameLoop hook instance
+  const context = useContext(GameContext);
+  const fps = context?.fps || 0;
 
   // Set up player controls
   usePlayerControls();
@@ -82,6 +86,11 @@ const GameUI: React.FC<GameUIProps> = ({ onPause }) => {
         </div>
       </motion.div>
 
+      {/* FPS Counter - for debugging */}
+      <div className="absolute top-16 right-4 bg-black/50 p-1 rounded-lg">
+        <span className="text-white font-mono text-xs">FPS: {fps}</span>
+      </div>
+
       {/* Pause Button */}
       <motion.button
         className="absolute top-4 right-4 bg-black/50 p-2 rounded-lg pointer-events-auto"
@@ -108,6 +117,7 @@ const GameUI: React.FC<GameUIProps> = ({ onPause }) => {
           <motion.button
             className="w-16 h-16 bg-black/40 rounded-full flex items-center justify-center"
             whileTap={{ scale: 0.9, backgroundColor: "rgba(0,0,0,0.6)" }}
+            data-control="left"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -128,6 +138,7 @@ const GameUI: React.FC<GameUIProps> = ({ onPause }) => {
           <motion.button
             className="w-16 h-16 bg-black/40 rounded-full flex items-center justify-center"
             whileTap={{ scale: 0.9, backgroundColor: "rgba(0,0,0,0.6)" }}
+            data-control="right"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -150,6 +161,7 @@ const GameUI: React.FC<GameUIProps> = ({ onPause }) => {
         <motion.button
           className="w-16 h-16 bg-black/40 rounded-full flex items-center justify-center"
           whileTap={{ scale: 0.9, backgroundColor: "rgba(0,0,0,0.6)" }}
+          data-control="jump"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
