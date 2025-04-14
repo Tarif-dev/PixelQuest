@@ -1,4 +1,4 @@
-import { Player, World } from '../types/game';
+import { Player, World } from "../types/game";
 
 export const updatePlayer = (
   player: Player,
@@ -6,20 +6,29 @@ export const updatePlayer = (
   deltaTime: number
 ): Player => {
   // Apply gravity
- let newVelocityY = player.velocityY + world.gravity;
-  
-  // Apply horizontal friction
+  let newVelocityY = player.velocityY + world.gravity;
+
+  // Determine if player is in the air
+  const inAir = player.isJumping;
+
+  // Apply horizontal friction (reduced in mid-air)
   let newVelocityX = player.velocityX;
+  const airFrictionFactor = 0.2; // Air has much less friction
+
+  const appliedFriction = inAir
+    ? world.friction * airFrictionFactor
+    : world.friction;
+
   if (player.velocityX > 0) {
-    newVelocityX = Math.max(0, player.velocityX - world.friction);
+    newVelocityX = Math.max(0, player.velocityX - appliedFriction);
   } else if (player.velocityX < 0) {
-    newVelocityX = Math.min(0, player.velocityX + world.friction);
+    newVelocityX = Math.min(0, player.velocityX + appliedFriction);
   }
-  
+
   // Calculate new position
   let newX = player.x + newVelocityX;
   let newY = player.y + newVelocityY;
-  
+
   // Check world boundaries
   if (newX < 0) {
     newX = 0;
@@ -28,16 +37,27 @@ export const updatePlayer = (
     newX = world.width - player.width;
     newVelocityX = 0;
   }
-  
-  // Bottom world boundary (could be a game over condition)
+
+  // Bottom world boundary (game over condition)
   if (newY > world.height) {
-    newY = world.height;
-    newVelocityY = 0;
+    // Don't adjust position - let the game loop detect this and trigger game over
+    // Just set this flag so we can detect it in the game loop
+    const playerOutOfBounds = true;
+    return {
+      ...player,
+      x: newX,
+      y: newY, // Keep the actual position beyond boundary
+      velocityX: newVelocityX,
+      velocityY: newVelocityY,
+      isJumping: true,
+      state: "jumping",
+      outOfBounds: playerOutOfBounds, // Add this flag to detect in game loop
+    };
   }
-  
+
   // Check platform collisions
   let isOnGround = false;
-  
+
   for (const platform of world.platforms) {
     // Check if player is landing on top of platform
     if (
@@ -50,7 +70,7 @@ export const updatePlayer = (
       newVelocityY = 0;
       isOnGround = true;
     }
-    
+
     // Check if player hits platform from below
     else if (
       player.y >= platform.y + platform.height &&
@@ -61,7 +81,7 @@ export const updatePlayer = (
       newY = platform.y + platform.height;
       newVelocityY = 0;
     }
-    
+
     // Check if player hits platform from the side
     else if (
       newY + player.height > platform.y &&
@@ -85,17 +105,17 @@ export const updatePlayer = (
       }
     }
   }
-  
+
   // Update player state based on movement
   let newState = player.state;
   if (!isOnGround) {
-    newState = 'jumping';
+    newState = "jumping";
   } else if (Math.abs(newVelocityX) > 0.1) {
-    newState = 'running';
+    newState = "running";
   } else {
-    newState = 'idle';
+    newState = "idle";
   }
-  
+
   return {
     ...player,
     x: newX,
@@ -103,6 +123,6 @@ export const updatePlayer = (
     velocityX: newVelocityX,
     velocityY: newVelocityY,
     isJumping: !isOnGround,
-    state: newState
+    state: newState,
   };
 };

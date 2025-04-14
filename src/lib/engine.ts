@@ -9,6 +9,9 @@ interface GameRenderState {
   health: number;
 }
 
+// Debug flag - set to true to see colored rectangles instead of images
+const DEBUG_RENDERING = false;
+
 // Sprite image references
 const sprites = {
   player: {
@@ -51,16 +54,20 @@ const loadImage = (src: string): Promise<HTMLImageElement> => {
     const img = new Image();
     img.onload = () => {
       imageCache[src] = img;
+      console.log(`Image loaded successfully: ${src}`);
       resolve(img);
     };
-    img.onerror = reject;
+    img.onerror = (e) => {
+      console.error(`Failed to load image: ${src}`, e);
+      reject(new Error(`Failed to load image: ${src}`));
+    };
     img.src = src;
+    // Set crossOrigin to ensure image can be used in canvas
+    img.crossOrigin = "anonymous";
   });
 };
 
 // Preload all images at startup to avoid async issues during gameplay
-const preloadedImages: Record<string, HTMLImageElement> = {};
-
 export const preloadGameAssets = async () => {
   try {
     console.log("Preloading game assets...");
@@ -132,6 +139,19 @@ export const renderGame = async (
   const canvasWidth = ctx.canvas.width;
   const canvasHeight = ctx.canvas.height;
 
+  // Log canvas dimensions for debugging
+  if (canvasWidth === 0 || canvasHeight === 0) {
+    console.error("Canvas dimensions are invalid:", canvasWidth, canvasHeight);
+    return;
+  }
+
+  // Clear the entire canvas first
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+  // Draw a solid background color
+  ctx.fillStyle = "#111122";
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
   // Setup camera
   const cameraX = setupCamera(
     ctx,
@@ -141,20 +161,40 @@ export const renderGame = async (
     world.width
   );
 
+  // Draw a grid for debugging
+  if (DEBUG_RENDERING) {
+    ctx.strokeStyle = "#333355";
+    ctx.lineWidth = 1;
+
+    // Vertical grid lines
+    for (let x = 0; x < world.width; x += 100) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvasHeight);
+      ctx.stroke();
+    }
+
+    // Horizontal grid lines
+    for (let y = 0; y < canvasHeight; y += 100) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(world.width, y);
+      ctx.stroke();
+    }
+  }
+
   // Render background
   try {
-    const bgImage = await loadImage(sprites.background);
-    const bgWidth = bgImage.width;
-    const bgHeight = bgImage.height;
+    if (DEBUG_RENDERING) {
+      ctx.fillStyle = "#000033";
+      ctx.fillRect(0, 0, world.width, canvasHeight);
+    } else {
+      const bgImage = await loadImage(sprites.background);
 
-    // Far background (0.2x scroll speed)
-    const farBgOffset = cameraX * 0.2;
-    for (
-      let x = Math.floor(farBgOffset / bgWidth) * bgWidth - farBgOffset;
-      x < canvasWidth + cameraX;
-      x += bgWidth
-    ) {
-      ctx.drawImage(bgImage, x, 0, bgWidth, bgHeight);
+      // Fill the entire visible area with the background
+      for (let x = 0; x < world.width; x += bgImage.width) {
+        ctx.drawImage(bgImage, x, 0, bgImage.width, canvasHeight);
+      }
     }
   } catch (error) {
     console.error("Failed to render background:", error);
@@ -164,16 +204,37 @@ export const renderGame = async (
 
   // Render platforms
   try {
-    const platformImage = await loadImage(sprites.platforms);
-    world.platforms.forEach((platform) => {
-      ctx.drawImage(
-        platformImage,
-        platform.x,
-        platform.y,
-        platform.width,
-        platform.height
-      );
-    });
+    if (DEBUG_RENDERING) {
+      ctx.fillStyle = "#7d4e24";
+      world.platforms.forEach((platform) => {
+        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+      });
+    } else {
+      const platformImage = await loadImage(sprites.platforms);
+
+      world.platforms.forEach((platform) => {
+        // Draw platform with proper scaling
+        ctx.drawImage(
+          platformImage,
+          platform.x,
+          platform.y,
+          platform.width,
+          platform.height
+        );
+
+        // Draw a border around the platform for visibility
+        if (DEBUG_RENDERING) {
+          ctx.strokeStyle = "#aa7733";
+          ctx.lineWidth = 2;
+          ctx.strokeRect(
+            platform.x,
+            platform.y,
+            platform.width,
+            platform.height
+          );
+        }
+      });
+    }
   } catch (error) {
     console.error("Failed to render platforms:", error);
     ctx.fillStyle = "#7d4e24";
@@ -187,19 +248,29 @@ export const renderGame = async (
     if (collectible.collected) continue;
 
     try {
-      const collectibleType =
-        collectible.type as keyof typeof sprites.collectibles;
-      const collectibleImage = await loadImage(
-        sprites.collectibles[collectibleType]
-      );
+      if (DEBUG_RENDERING) {
+        ctx.fillStyle = collectible.type === "gem" ? "#ffcc00" : "#ff44ff";
+        ctx.fillRect(
+          collectible.x,
+          collectible.y,
+          collectible.width,
+          collectible.height
+        );
+      } else {
+        const collectibleType =
+          collectible.type as keyof typeof sprites.collectibles;
+        const collectibleImage = await loadImage(
+          sprites.collectibles[collectibleType]
+        );
 
-      ctx.drawImage(
-        collectibleImage,
-        collectible.x,
-        collectible.y,
-        collectible.width,
-        collectible.height
-      );
+        ctx.drawImage(
+          collectibleImage,
+          collectible.x,
+          collectible.y,
+          collectible.width,
+          collectible.height
+        );
+      }
     } catch (error) {
       console.error(`Failed to render ${collectible.type}:`, error);
       ctx.fillStyle = collectible.type === "gem" ? "#ffcc00" : "#ff44ff";
@@ -215,10 +286,16 @@ export const renderGame = async (
   // Render enemies
   for (const enemy of enemies) {
     try {
-      const direction = enemy.direction as keyof typeof sprites.enemies.moving;
-      const enemyImage = await loadImage(sprites.enemies.moving[direction]);
+      if (DEBUG_RENDERING) {
+        ctx.fillStyle = "#ff0000";
+        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+      } else {
+        const direction =
+          enemy.direction as keyof typeof sprites.enemies.moving;
+        const enemyImage = await loadImage(sprites.enemies.moving[direction]);
 
-      ctx.drawImage(enemyImage, enemy.x, enemy.y, enemy.width, enemy.height);
+        ctx.drawImage(enemyImage, enemy.x, enemy.y, enemy.width, enemy.height);
+      }
     } catch (error) {
       console.error("Failed to render enemy:", error);
       ctx.fillStyle = "#ff0000";
@@ -228,18 +305,49 @@ export const renderGame = async (
 
   // Render player
   try {
-    const playerState = player.state as keyof typeof sprites.player;
-    const playerDirection =
-      player.direction as keyof typeof sprites.player.idle;
-    const playerImage = await loadImage(
-      sprites.player[playerState][playerDirection]
-    );
+    if (DEBUG_RENDERING) {
+      ctx.fillStyle = "#00ff00";
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+    } else {
+      const playerState = player.state as keyof typeof sprites.player;
+      const playerDirection =
+        player.direction as keyof typeof sprites.player.idle;
+      const playerImage = await loadImage(
+        sprites.player[playerState][playerDirection]
+      );
 
-    ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+      ctx.drawImage(
+        playerImage,
+        player.x,
+        player.y,
+        player.width,
+        player.height
+      );
+
+      // Draw a border around the player for visibility
+      if (DEBUG_RENDERING) {
+        ctx.strokeStyle = "#00ff00";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(player.x, player.y, player.width, player.height);
+      }
+    }
   } catch (error) {
     console.error("Failed to render player:", error);
     ctx.fillStyle = "#00ff00";
     ctx.fillRect(player.x, player.y, player.width, player.height);
+  }
+
+  // Draw coordinates for debugging
+  if (DEBUG_RENDERING) {
+    ctx.font = "12px Arial";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(
+      `Player: (${Math.round(player.x)}, ${Math.round(player.y)})`,
+      player.x,
+      player.y - 10
+    );
+    ctx.fillText(`Camera: ${Math.round(cameraX)}`, 10 + cameraX, 20);
+    ctx.fillText(`Canvas: ${canvasWidth}x${canvasHeight}`, 10 + cameraX, 40);
   }
 
   // Restore context

@@ -11,6 +11,7 @@ export const useGameLoop = (
   const lastTimeRef = useRef<number>(0);
   const renderPendingRef = useRef<boolean>(false);
   const frameTimesRef = useRef<number[]>([]);
+  const frameCountRef = useRef<number>(0);
 
   const {
     gameStatus,
@@ -39,18 +40,47 @@ export const useGameLoop = (
         const currentFps = Math.round(1000 / avgFrameTime);
         setFps(currentFps);
         frameTimesRef.current = [];
+
+        // Log debugging info every second
+        console.log(
+          `FPS: ${currentFps}, Frame count: ${frameCountRef.current}`
+        );
+        console.log(
+          `Player position: (${player.x.toFixed(2)}, ${player.y.toFixed(2)})`
+        );
+
+        if (canvasRef.current) {
+          console.log(
+            `Canvas size: ${canvasRef.current.width}x${canvasRef.current.height}`
+          );
+        }
+
+        frameCountRef.current = 0;
       }
     }, 1000);
 
     return () => clearInterval(fpsInterval);
-  }, [setFps]);
+  }, [setFps, player, canvasRef]);
 
   const gameLoop = useCallback(
     (time: number) => {
-      if (!canvasRef.current) return;
+      // Increment frame counter for debugging
+      frameCountRef.current++;
 
+      // Check if canvas exists
+      if (!canvasRef.current) {
+        console.warn("Canvas ref is null, skipping frame");
+        gameLoopRef.current = requestAnimationFrame(gameLoop);
+        return;
+      }
+
+      // Get canvas context
       const ctx = canvasRef.current.getContext("2d", { alpha: false });
-      if (!ctx) return;
+      if (!ctx) {
+        console.warn("Could not get canvas context, skipping frame");
+        gameLoopRef.current = requestAnimationFrame(gameLoop);
+        return;
+      }
 
       // Calculate delta time and track for FPS calculation
       const now = performance.now();
@@ -60,14 +90,49 @@ export const useGameLoop = (
       lastTimeRef.current = now;
 
       // Add frame time to our tracking array for FPS calculation
-      frameTimesRef.current.push(now - time);
+      if (time > 0) {
+        // Avoid adding the first frame
+        frameTimesRef.current.push(now - time);
+      }
 
       // Clear canvas with a solid color to ensure it's visible
       ctx.fillStyle = "#000022";
       ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
+      // Draw text to indicate the game is running
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "16px Arial";
+      ctx.fillText(
+        `Game loop running - Frame ${frameCountRef.current}`,
+        20,
+        30
+      );
+      ctx.fillText(
+        `Player: (${Math.round(player.x)}, ${Math.round(player.y)})`,
+        20,
+        50
+      );
+
       // Update game state
       const updatedPlayer = updatePlayer(player, world, deltaTime);
+
+      // Check if player has fallen out of bounds (into water)
+      if (updatedPlayer.outOfBounds || updatedPlayer.y > world.height) {
+        console.log("Player fell into water! Game over.");
+
+        // Set health to 0 and trigger game over
+        setHealth(0);
+        gameOver();
+
+        // Stop the game loop to prevent further updates
+        if (gameLoopRef.current) {
+          cancelAnimationFrame(gameLoopRef.current);
+          gameLoopRef.current = null;
+        }
+
+        return; // Exit the game loop immediately
+      }
+
       setPlayer(updatedPlayer);
 
       // Check collisions
@@ -167,6 +232,11 @@ export const useGameLoop = (
               canvasRef.current!.height
             );
 
+            // Draw error message
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "20px Arial";
+            ctx.fillText("Error rendering game", 20, 100);
+
             // Render placeholder for player
             ctx.fillStyle = "#00ff00";
             ctx.fillRect(player.x, player.y, player.width, player.height);
@@ -182,6 +252,11 @@ export const useGameLoop = (
               );
             });
           });
+      } else {
+        // If rendering is pending, draw a message
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "20px Arial";
+        ctx.fillText("Rendering in progress...", 20, 70);
       }
 
       // Continue the game loop
@@ -208,6 +283,9 @@ export const useGameLoop = (
     if (gameLoopRef.current === null) {
       console.log("Starting game loop");
       lastTimeRef.current = 0;
+      frameCountRef.current = 0;
+      frameTimesRef.current = [];
+      renderPendingRef.current = false;
       gameLoopRef.current = requestAnimationFrame(gameLoop);
     }
   }, [gameLoop]);

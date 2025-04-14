@@ -45,6 +45,7 @@ export interface Player {
   isJumping: boolean;
   direction: "left" | "right";
   state: "idle" | "running" | "jumping";
+  outOfBounds?: boolean; // Add this flag to detect when player falls into water
 }
 
 export interface Platform {

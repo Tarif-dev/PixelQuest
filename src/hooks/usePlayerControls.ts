@@ -64,10 +64,26 @@ export const usePlayerControls = (): void => {
 
       const moveSpeed = 5;
       const jumpForce = -12;
+      // Give player better control in the air (slight boost)
+      const airControlBoost = 1.2;
 
       let newVelocityX = 0;
-      if (keys.left) newVelocityX -= moveSpeed;
-      if (keys.right) newVelocityX += moveSpeed;
+      if (keys.left) {
+        // Apply slightly more force when changing direction in mid-air
+        if (player.isJumping && player.velocityX > 0) {
+          newVelocityX = -moveSpeed * airControlBoost;
+        } else {
+          newVelocityX = -moveSpeed;
+        }
+      }
+      if (keys.right) {
+        // Apply slightly more force when changing direction in mid-air
+        if (player.isJumping && player.velocityX < 0) {
+          newVelocityX = moveSpeed * airControlBoost;
+        } else {
+          newVelocityX = moveSpeed;
+        }
+      }
 
       let newState: Player["state"] = "idle";
       let newDirection: Player["direction"] = player.direction;

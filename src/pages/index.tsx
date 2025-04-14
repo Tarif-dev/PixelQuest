@@ -9,7 +9,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     const preloadImages = [
       "/assets/sprites/logo.svg",
-      "/assets/backgrounds/menu-bg.png",
+      "/assets/backgrounds/menu-bg.svg",
     ];
 
     preloadImages.forEach((src) => {
