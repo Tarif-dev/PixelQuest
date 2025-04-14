@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="16" viewBox="0 0 64 16" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pixel Art Bouncy Platform -->
+  
+  <!-- Platform Base (Springs) -->
+  <rect x="8" y="8" width="48" height="8" fill="#555555" />
+  
+  <!-- Bouncy Top -->
+  <rect x="0" y="0" width="64" height="8" fill="#e63f3f" rx="4" ry="4" />
+  <rect x="4" y="2" width="56" height="4" fill="#ff5555" rx="2" ry="2" />
+  
+  <!-- Spring Coils -->
+  <rect x="12" y="8" width="8" height="2" fill="#777777" />
+  <rect x="12" y="12" width="8" height="2" fill="#777777" />
+  
+  <rect x="28" y="8" width="8" height="2" fill="#777777" />
+  <rect x="28" y="12" width="8" height="2" fill="#777777" />
+  
+  <rect x="44" y="8" width="8" height="2" fill="#777777" />
+  <rect x="44" y="12" width="8" height="2" fill="#777777" />
+  
+  <!-- Spring Poles -->
+  <rect x="14" y="8" width="4" height="8" fill="#999999" />
+  <rect x="30" y="8" width="4" height="8" fill="#999999" />
+  <rect x="46" y="8" width="4" height="8" fill="#999999" />
+  
+  <!-- Platform Highlights -->
+  <rect x="8" y="0" width="48" height="1" fill="#ff7777" />
+  
+  <!-- Platform Shadow -->
+  <rect x="8" y="15" width="48" height="1" fill="#444444" />
+  
+  <!-- Bouncy Animation -->
+  <animate attributeName="height" values="16;14;16" dur="0.5s" repeatCount="indefinite" />
+  <animate attributeName="y" values="0;1;0" dur="0.5s" repeatCount="indefinite" />
+</svg>

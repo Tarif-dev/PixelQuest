@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pixel Art Gem Collectible -->
+  
+  <!-- Gem Body -->
+  <polygon points="12,2 22,8 22,16 12,22 2,16 2,8" fill="#8a2be2" />
+  
+  <!-- Gem Facets -->
+  <polygon points="12,2 12,22 22,16 22,8" fill="#9d4ef5" />
+  <polygon points="12,2 2,8 12,14 22,8" fill="#b178f7" />
+  
+  <!-- Gem Highlights -->
+  <polygon points="12,2 16,4 16,6 12,8 8,6 8,4" fill="#d4b4fa" />
+  <rect x="11" y="8" width="2" height="2" fill="#ffffff" opacity="0.6" />
+  
+  <!-- Sparkling Effect -->
+  <circle cx="18" cy="7" r="1" fill="#ffffff" opacity="0.8">
+    <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="6" cy="12" r="1" fill="#ffffff" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;0.1;0.6" dur="1.3s" repeatCount="indefinite" />
+  </circle>
+  
+  <!-- Floating Animation -->
+  <animateTransform attributeName="transform" type="translate"
+      values="0,0; 0,-2; 0,0"
+      dur="1s" repeatCount="indefinite"/>
+</svg>

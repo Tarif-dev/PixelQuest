@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="48" viewBox="0 0 32 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pixel Art Player Character - Jump Right -->
+  
+  <!-- Body (slightly tilted for jumping) -->
+  <rect x="12" y="16" width="8" height="16" fill="#4b76e8" transform="rotate(10, 16, 24)"/>
+  
+  <!-- Head -->
+  <rect x="10" y="6" width="12" height="12" fill="#ffd599"/>
+  
+  <!-- Hair (windblown effect) -->
+  <rect x="10" y="6" width="12" height="4" fill="#7c4a22"/>
+  <rect x="10" y="6" width="2" height="8" fill="#7c4a22"/>
+  <rect x="10" y="6" width="4" height="6" fill="#7c4a22"/>
+  
+  <!-- Eyes -->
+  <rect x="18" y="10" width="2" height="2" fill="#222"/>
+  
+  <!-- Mouth (exertion face) -->
+  <rect x="16" y="14" width="4" height="1" fill="#f55"/>
+  
+  <!-- Arms (jumping position) -->
+  <rect x="20" y="16" width="4" height="12" fill="#ffd599" transform="rotate(45, 20, 16)"/>
+  <rect x="8" y="16" width="4" height="12" fill="#ffd599" transform="rotate(-20, 12, 16)"/>
+  
+  <!-- Hands -->
+  <rect x="27" y="16" width="4" height="4" fill="#ffd599"/>
+  <rect x="4" y="21" width="4" height="4" fill="#ffd599"/>
+  
+  <!-- Legs (jumping position) -->
+  <rect x="16" y="32" width="4" height="12" fill="#345bc4" transform="rotate(30, 16, 32)"/>
+  <rect x="12" y="32" width="4" height="12" fill="#345bc4" transform="rotate(0, 12, 32)"/>
+  
+  <!-- Feet -->
+  <rect x="22" y="36" width="4" height="4" fill="#874a22"/>
+  <rect x="12" y="44" width="4" height="4" fill="#874a22"/>
+  
+  <!-- Shirt Details -->
+  <rect x="14" y="16" width="4" height="16" fill="#5c86f8" transform="rotate(10, 16, 24)"/>
+  
+  <!-- Jump Animation -->
+  <animateTransform attributeName="transform" type="translate"
+      values="0,0; 0,-4; 0,0"
+      dur="0.8s" repeatCount="indefinite"/>
+</svg>

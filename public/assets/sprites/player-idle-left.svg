@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="48" viewBox="0 0 32 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pixel Art Player Character - Idle Left -->
+  
+  <!-- Body -->
+  <rect x="12" y="16" width="8" height="16" fill="#4b76e8"/>
+  
+  <!-- Head -->
+  <rect x="10" y="6" width="12" height="12" fill="#ffd599"/>
+  
+  <!-- Hair -->
+  <rect x="10" y="6" width="12" height="4" fill="#7c4a22"/>
+  <rect x="20" y="6" width="2" height="8" fill="#7c4a22"/>
+  
+  <!-- Eyes -->
+  <rect x="12" y="10" width="2" height="2" fill="#222"/>
+  
+  <!-- Mouth -->
+  <rect x="12" y="14" width="4" height="1" fill="#f55"/>
+  
+  <!-- Arms -->
+  <rect x="8" y="16" width="4" height="12" fill="#ffd599"/>
+  <rect x="20" y="16" width="4" height="12" fill="#ffd599"/>
+  
+  <!-- Hands -->
+  <rect x="8" y="28" width="4" height="4" fill="#ffd599"/>
+  <rect x="20" y="28" width="4" height="4" fill="#ffd599"/>
+  
+  <!-- Legs -->
+  <rect x="12" y="32" width="4" height="12" fill="#345bc4"/>
+  <rect x="16" y="32" width="4" height="12" fill="#345bc4"/>
+  
+  <!-- Feet -->
+  <rect x="12" y="44" width="4" height="4" fill="#874a22"/>
+  <rect x="16" y="44" width="4" height="4" fill="#874a22"/>
+  
+  <!-- Shirt Details -->
+  <rect x="14" y="16" width="4" height="16" fill="#5c86f8"/>
+  
+  <!-- Breathing Animation -->
+  <animate attributeName="height" values="48;47;48" dur="1s" repeatCount="indefinite" begin="0s" />
+</svg>
