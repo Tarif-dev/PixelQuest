@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RetroQuest - An Epic Platformer Adventure
 
-## Getting Started
+![RetroQuest Logo](./public/assets/sprites/retroquest-logo.svg)
 
-First, run the development server:
+## Overview
 
+RetroQuest is a pixel-perfect platformer game that combines classic gameplay mechanics with modern design sensibilities. Navigate through five increasingly challenging levels, collect colorful gems, avoid enemies, and master your platforming skills in this retro-inspired adventure.
+
+## Features
+
+- **Five Challenging Levels** - Progress through progressively difficult environments from beginner-friendly to master challenges
+- **Diverse Environments** - Explore varied terrains from basic platforms to complex vertical climbs, treacherous bridges, and epic finales
+- **Dynamic Platform Types**:
+  - Regular platforms for basic traversal
+  - Moving platforms that shift horizontally, requiring precise timing
+  - Bouncy platforms that propel you higher than normal jumps
+  - Falling platforms that collapse shortly after you step on them
+- **Collectible Variety**:
+  - Colorful gems (red, blue, and green) to increase your score
+  - Power-ups including speed boosts, shields, and stars
+  - Special items that complete levels and unlock new challenges
+- **Challenging Enemies** - Face increasingly difficult foes, from basic patrolling enemies to aggressive "boss-like" opponents
+- **Fluid Controls** - Enjoy responsive movement with pixel-perfect jumping and movement
+- **Score System** - Track your progress, compete for high scores, and challenge yourself to collect every gem
+
+## How to Play
+
+- **WASD or Arrow Keys** - Move your character
+- **Spacebar** - Jump
+- **P** - Pause/Resume game
+- **M** - Toggle menu
+
+Your goal is to navigate each level, collect gems to increase your score, and reach the special item at the end of each level to progress to the next challenge. Avoid or defeat enemies to stay alive!
+
+## Level Progression
+
+### Level 1: Beginner's Path
+A gentle introduction to the mechanics with forgiving platforms and basic enemies. Perfect for getting familiar with the controls and gameplay.
+
+### Level 2: Intermediate Challenge
+Slightly faster gravity and more spaced-out platforms require more precise jumping. Enemies move faster, presenting a greater challenge.
+
+### Level 3: Hard Difficulty
+Higher gravity and irregular platform placement test your platforming skills. Introduces colored gems and more aggressive enemies.
+
+### Level 4: Expert Cave System
+Features a complex layout with specialized platform types. Navigate moving platforms, bounce across chasms, and traverse narrow ledges in this challenging cave environment.
+
+### Level 5: Master Finale
+An epic conclusion featuring:
+- Vertical climbing sections
+- A precarious bridge of falling platforms
+- Moving platforms of increasing speed
+- Bouncy platform challenges
+- A final gauntlet with boss-like enemies
+- The ultimate victory platform that completes your quest!
+
+## Technical Implementation
+
+RetroQuest is built using modern web technologies:
+- **React** for component-based UI architecture
+- **TypeScript** for type safety and enhanced developer experience
+- **React Context API** for efficient state management
+- **HTML5 Canvas** for smooth rendering and game performance
+- **CSS Modules** for scoped, maintainable styling
+- **Custom game physics engine** for precise platformer mechanics
+
+## Development
+
+### Prerequisites
+- Node.js (v14+)
+- npm or yarn
+
+### Installation
 ```bash
-npm run dev
+# Clone the repository
+git clone https://github.com/yourusername/retroquest.git
+
+# Navigate to project directory
+cd retroquest
+
+# Install dependencies
+npm install
 # or
-yarn dev
+yarn install
+
+# Start development server
+npm start
 # or
-pnpm dev
-# or
-bun dev
+yarn start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Future Enhancements
+- Mobile touch controls
+- Local multiplayer support
+- Level editor
+- Achievement system
+- Additional power-ups and enemies
+- Custom character skins
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Assets and Credits
+All pixel art assets were custom created for RetroQuest, including:
+- Character sprites
+- Platform variations
+- Collectible gems and power-ups
+- Enemy designs
+- Background elements
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Learn More
+## Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-To learn more about Next.js, take a look at the following resources:
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Enjoy your RetroQuest adventure! Feedback and suggestions are always welcome.
