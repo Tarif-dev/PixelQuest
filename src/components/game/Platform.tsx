@@ -1,15 +1,15 @@
 // Platform.tsx
-import React, { useEffect, useRef } from 'react';
-import { useGameContext } from '../../context/GameContext';
+import React, { useEffect, useState, useRef } from "react";
 
 interface PlatformProps {
   x: number;
   y: number;
   width: number;
   height: number;
-  type: 'regular' | 'breakable' | 'moving' | 'bouncy';
-  movementPath?: Array<{x: number, y: number}>;
-  movementSpeed?: number;
+  type?: string;
+  movementRange?: number;
+  speed?: number;
+  fallDelay?: number;
 }
 
 const Platform: React.FC<PlatformProps> = ({
@@ -17,150 +17,114 @@ const Platform: React.FC<PlatformProps> = ({
   y,
   width,
   height,
-  type = 'regular',
-  movementPath = [],
-  movementSpeed = 2
+  type = "normal",
+  movementRange = 100,
+  speed = 1,
+  fallDelay = 500,
 }) => {
-  const platformRef = useRef<HTMLDivElement>(null);
-  const { gameState, dispatch } = useGameContext();
-  const [position, setPosition] = React.useState({ x, y });
-  const [currentPathIndex, setCurrentPathIndex] = React.useState(0);
-  const [platformState, setPlatformState] = React.useState<'normal' | 'breaking' | 'broken'>('normal');
-  
-  useEffect(() => {
-    // Register platform with game context
-    dispatch({
-      type: 'REGISTER_PLATFORM',
-      payload: {
-        id: platformRef.current?.id || `platform-${x}-${y}`,
-        bounds: {
-          x: position.x,
-          y: position.y,
-          width,
-          height
-        },
-        type,
-        properties: {
-          isBouncy: type === 'bouncy',
-          isBreakable: type === 'breakable',
-          isMoving: type === 'moving',
-          state: platformState
-        }
-      }
-    });
-    
-    return () => {
-      // Cleanup on unmount
-      dispatch({
-        type: 'REMOVE_PLATFORM',
-        payload: platformRef.current?.id || `platform-${x}-${y}`
-      });
-    };
-  }, [dispatch, position, width, height, type, platformState]);
-  
+  const [position, setPosition] = useState({ x, y });
+  const [direction, setDirection] = useState(1); // 1 for right/down, -1 for left/up
+  const [isFalling, setIsFalling] = useState(false);
+  const moveTimer = useRef<number | null>(null);
+  const startingPosition = useRef({ x, y });
+
   // Handle moving platforms
   useEffect(() => {
-    if (!gameState.isRunning || type !== 'moving' || movementPath.length < 2) return;
-    
-    const updateMovingPlatform = () => {
-      const targetPoint = movementPath[currentPathIndex];
-      const dx = targetPoint.x - position.x;
-      const dy = targetPoint.y - position.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      
-      if (distance < movementSpeed) {
-        // Reached the target point, move to next
-        setCurrentPathIndex((currentPathIndex + 1) % movementPath.length);
-      } else {
-        // Move towards target
-        const dirX = dx / distance;
-        const dirY = dy / distance;
-        
-        setPosition({
-          x: position.x + dirX * movementSpeed,
-          y: position.y + dirY * movementSpeed
-        });
-      }
-    };
-    
-    const intervalId = setInterval(updateMovingPlatform, 16);
-    return () => clearInterval(intervalId);
-  }, [gameState.isRunning, type, movementPath, currentPathIndex, position, movementSpeed]);
-  
-  // Handle breakable platforms
+    if (type !== "moving") return;
+
+    const moveInterval = setInterval(() => {
+      setPosition((prev) => {
+        // Calculate new position
+        const newX = prev.x + speed * direction;
+
+        // Check if we need to change direction
+        if (Math.abs(newX - startingPosition.current.x) >= movementRange) {
+          setDirection((d) => -d);
+          return { ...prev, x: prev.x - speed * direction };
+        }
+
+        return { ...prev, x: newX };
+      });
+    }, 16); // ~60fps
+
+    return () => clearInterval(moveInterval);
+  }, [type, direction, movementRange, speed]);
+
+  // Handle falling platforms
   useEffect(() => {
-    if (type !== 'breakable' || platformState === 'broken') return;
-    
-    // Check for player collision with this platform
-    const checkForBreaking = () => {
-      const playerBounds = gameState.playerState.bounds;
-      const platformBounds = {
-        x: position.x,
-        y: position.y,
-        width,
-        height
-      };
-      
-      // If player is standing on this platform and moving down
-      if (
-        gameState.playerState.velocity.y > 0 &&
-        playerBounds.y + playerBounds.height <= platformBounds.y + 5 &&
-        playerBounds.y + playerBounds.height >= platformBounds.y - 5 &&
-        playerBounds.x + playerBounds.width > platformBounds.x &&
-        playerBounds.x < platformBounds.x + platformBounds.width
-      ) {
-        // Start breaking animation
-        setPlatformState('breaking');
-        
-        // After animation, set to broken
-        setTimeout(() => {
-          setPlatformState('broken');
-        }, 500);
+    if (type !== "falling") return;
+
+    const handleFall = () => {
+      setIsFalling(true);
+
+      // Animate the fall
+      const fallInterval = setInterval(() => {
+        setPosition((prev) => ({
+          ...prev,
+          y: prev.y + 5, // Fall speed
+        }));
+      }, 16);
+
+      setTimeout(() => {
+        clearInterval(fallInterval);
+      }, 2000); // Stop after 2 seconds (out of view)
+    };
+
+    // In a real game, we would trigger this when the player lands on the platform
+    // For now, we'll just use a timer since this is a simplified example
+    if (moveTimer.current) {
+      clearTimeout(moveTimer.current);
+    }
+
+    // This would actually be triggered by collision detection
+    const simulatePlayerLanding = () => {
+      moveTimer.current = window.setTimeout(handleFall, fallDelay);
+    };
+
+    // This is just for demo purposes; in a real game this would be triggered by collision
+    simulatePlayerLanding();
+
+    return () => {
+      if (moveTimer.current) {
+        clearTimeout(moveTimer.current);
       }
     };
-    
-    const intervalId = setInterval(checkForBreaking, 100);
-    return () => clearInterval(intervalId);
-  }, [gameState.playerState.bounds, gameState.playerState.velocity, position, width, height, type, platformState]);
-  
-  // Choose the right sprite based on platform type and state
-  const getBackgroundImage = () => {
+  }, [type, fallDelay]);
+
+  // Choose the right image based on platform type
+  const getImagePath = () => {
     switch (type) {
-      case 'regular':
-        return "url('/assets/sprites/platform_regular.png')";
-      case 'breakable':
-        if (platformState === 'normal') return "url('/assets/sprites/platform_breakable.png')";
-        if (platformState === 'breaking') return "url('/assets/sprites/platform_breaking.png')";
-        return ""; // broken - invisible
-      case 'moving':
-        return "url('/assets/sprites/platform_moving.png')";
-      case 'bouncy':
-        return "url('/assets/sprites/platform_bouncy.png')";
+      case "moving":
+        return "/assets/sprites/platform_moving.svg";
+      case "bouncy":
+        return "/assets/sprites/platform_bouncy.svg";
+      case "falling":
+        return "/assets/sprites/platform_regular.svg"; // Use regular platform for falling
       default:
-        return "url('/assets/sprites/platform_regular.png')";
+        return "/assets/sprites/platform_regular.svg";
     }
   };
-  
-  // Don't render if platform is broken
-  if (type === 'breakable' && platformState === 'broken') return null;
-  
+
+  // Don't render if the platform has fallen far out of view
+  if (isFalling && position.y > 1000) return null;
+
   return (
     <div
-      ref={platformRef}
-      id={`platform-${x}-${y}`}
-      className={`platform ${type} ${platformState}`}
+      className={`platform ${type}`}
       style={{
-        position: 'absolute',
-        transform: `translate(${position.x}px, ${position.y}px)`,
+        position: "absolute",
+        left: `${position.x}px`,
+        top: `${position.y}px`,
         width: `${width}px`,
         height: `${height}px`,
-        backgroundImage: getBackgroundImage(),
-        backgroundSize: type === 'regular' ? '32px 32px' : 'contain',
-        backgroundRepeat: type === 'regular' ? 'repeat-x' : 'no-repeat',
-        imageRendering: 'pixelated',
-        transition: type === 'moving' ? 'transform 0.05s linear' : 'none',
-        zIndex: 4
+        backgroundImage: `url(${getImagePath()})`,
+        backgroundSize: "contain",
+        backgroundRepeat: "repeat-x",
+        imageRendering: "pixelated",
+        zIndex: 4,
+        transition: isFalling ? "none" : "left 0.1s linear",
       }}
+      data-type={type}
     />
   );
 };

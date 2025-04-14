@@ -1,8 +1,9 @@
-import { useRef, useCallback, useEffect } from "react";
+import { useRef, useCallback, useEffect, useContext } from "react";
 import { useGameState } from "./useGameState";
 import { updatePlayer } from "../lib/physics";
 import { checkCollisions } from "../lib/collision";
 import { renderGame } from "../lib/engine";
+import { GameContext } from "../context/GameContext";
 
 export const useGameLoop = (
   canvasRef: React.RefObject<HTMLCanvasElement | null>
@@ -12,6 +13,13 @@ export const useGameLoop = (
   const renderPendingRef = useRef<boolean>(false);
   const frameTimesRef = useRef<number[]>([]);
   const frameCountRef = useRef<number>(0);
+
+  // Access the full GameContext to get levelComplete function
+  const gameContext = useContext(GameContext);
+
+  if (!gameContext) {
+    throw new Error("useGameLoop must be used within a GameProvider");
+  }
 
   const {
     gameStatus,
@@ -152,9 +160,39 @@ export const useGameLoop = (
         setCollectibles(collisionResult.updatedCollectibles);
         if (collisionResult.collectedItem) {
           // Increase score
-          setScore(
-            score + (collisionResult.collectedItem.type === "gem" ? 100 : 500)
-          );
+          const pointValue =
+            collisionResult.collectedItem.type === "special" ? 500 : 100;
+          const newScore = score + pointValue;
+          setScore(newScore);
+
+          // Check if this is a special collectible which triggers level completion
+          if (collisionResult.collectedItem.type === "special") {
+            // Trigger level completion
+            console.log("Special collectible collected! Level complete!");
+            gameContext.levelComplete();
+
+            // Stop the game loop
+            if (gameLoopRef.current) {
+              cancelAnimationFrame(gameLoopRef.current);
+              gameLoopRef.current = null;
+            }
+
+            return; // Exit the game loop immediately
+          }
+
+          // Alternative: Also trigger level completion if score reaches certain thresholds
+          if (score < 1000 && newScore >= 1000) {
+            console.log("Score reached 1000! Level complete!");
+            gameContext.levelComplete();
+
+            // Stop the game loop
+            if (gameLoopRef.current) {
+              cancelAnimationFrame(gameLoopRef.current);
+              gameLoopRef.current = null;
+            }
+
+            return; // Exit the game loop immediately
+          }
         }
       }
 
@@ -276,6 +314,7 @@ export const useGameLoop = (
       score,
       setScore,
       gameOver,
+      gameContext,
     ]
   );
 

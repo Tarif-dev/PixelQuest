@@ -53,6 +53,10 @@ export interface Platform {
   y: number;
   width: number;
   height: number;
+  type?: PlatformType;
+  movementRange?: number;
+  speed?: number;
+  fallDelay?: number;
 }
 
 export interface World {
