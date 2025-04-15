@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useGameState } from "../../hooks/useGameState";
 
 interface MainMenuProps {
   onStartGame: () => void;
@@ -10,11 +11,11 @@ const MainMenu = ({ onStartGame }: MainMenuProps) => {
   const [showCredits, setShowCredits] = useState<boolean>(false);
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [showControls, setShowControls] = useState<boolean>(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Audio settings
-  const [musicVolume, setMusicVolume] = useState<number>(75);
-  const [sfxVolume, setSfxVolume] = useState<number>(50);
+  // Get audio functionality from GameContext
+  const { playAudio, musicVolume, sfxVolume, setMusicVolume, setSfxVolume } =
+    useGameState();
+
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
   // Animations and effects
@@ -24,6 +25,13 @@ const MainMenu = ({ onStartGame }: MainMenuProps) => {
   const [clouds, setClouds] = useState<
     Array<{ id: number; x: number; y: number; scale: number; speed: number }>
   >([]);
+
+  // Play main theme when component mounts
+  useEffect(() => {
+    playAudio("mainTheme");
+
+    // No need for cleanup as the GameContext will handle stopping audio when needed
+  }, [playAudio]);
 
   // Generate stars and clouds
   useEffect(() => {
@@ -61,9 +69,9 @@ const MainMenu = ({ onStartGame }: MainMenuProps) => {
 
   // Sound effect for buttons
   const playButtonSound = () => {
-    const sound = new Audio("/assets/sounds/button-click.wav");
-    sound.volume = sfxVolume / 100;
-    sound.play();
+    // Since we don't have a dedicated button sound in our audio hook,
+    // we'll use the gem collection sound as a temporary button click sound
+    playAudio("gemCollect");
   };
 
   // Main container variants
@@ -469,15 +477,6 @@ const MainMenu = ({ onStartGame }: MainMenuProps) => {
           />
         )}
       </AnimatePresence>
-
-      {/* Audio player */}
-      <audio
-        ref={audioRef}
-        src="/assets/music/main-theme.mp3"
-        loop
-        autoPlay
-        style={{ display: "none" }}
-      />
 
       {/* Footer info */}
       <div className="absolute bottom-4 left-0 right-0 z-30 flex justify-between items-center px-6">

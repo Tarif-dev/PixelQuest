@@ -1,5 +1,5 @@
 // GameOver.tsx
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useGameState } from "../../hooks/useGameState";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,7 +14,6 @@ const GameOver: React.FC = () => {
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
   const [animationPhase, setAnimationPhase] = useState(0);
-  const audioRef = useRef<HTMLAudioElement>(null);
   const [statEffect, setStatEffect] = useState({
     gems: 0,
     enemies: 0,
@@ -30,12 +29,7 @@ const GameOver: React.FC = () => {
       setAnimationPhase(0);
 
       // Play game over music
-      if (audioRef.current) {
-        audioRef.current.volume = 0.4;
-        audioRef.current
-          .play()
-          .catch((e) => console.error("Audio play failed:", e));
-      }
+      gameState.playAudio("gameOver");
 
       // Check for high score
       const storedHighScore = localStorage.getItem("retroquest_highscore")
@@ -85,15 +79,13 @@ const GameOver: React.FC = () => {
       setVisible(false);
       setAnimationPhase(0);
     }
-  }, [gameState.gameStatus, gameState.score]);
+  }, [gameState.gameStatus, gameState.score, gameState.playAudio]);
 
   if (!visible) return null;
 
   const handleRestart = () => {
     // Play button sound
-    const buttonSound = new Audio("/sounds/button-click.mp3");
-    buttonSound.volume = 0.5;
-    buttonSound.play();
+    gameState.playAudio("gemCollect");
 
     // Reset game state and restart
     gameState.initGame();
@@ -102,9 +94,7 @@ const GameOver: React.FC = () => {
 
   const handleMainMenu = () => {
     // Play button sound
-    const buttonSound = new Audio("/sounds/button-click.mp3");
-    buttonSound.volume = 0.5;
-    buttonSound.play();
+    gameState.playAudio("gemCollect");
 
     // Reset game state
     gameState.setGameStatus("menu");
@@ -635,13 +625,6 @@ const GameOver: React.FC = () => {
           score!
         </motion.div>
       </motion.div>
-
-      {/* Game over audio effect */}
-      <audio
-        ref={audioRef}
-        src="/sounds/game-over.mp3"
-        style={{ display: "none" }}
-      />
     </motion.div>
   );
 };

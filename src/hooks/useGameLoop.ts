@@ -37,6 +37,7 @@ export const useGameLoop = (
     gameOver,
     fps,
     setFps,
+    playAudio, // Add the playAudio function to play sound effects
   } = useGameState();
 
   // Keep track of FPS
@@ -159,6 +160,9 @@ export const useGameLoop = (
       if (collisionResult.updatedCollectibles) {
         setCollectibles(collisionResult.updatedCollectibles);
         if (collisionResult.collectedItem) {
+          // Play gem collection sound effect
+          playAudio("gemCollect");
+
           // Increase score
           const pointValue =
             collisionResult.collectedItem.type === "special" ? 500 : 100;
@@ -315,6 +319,7 @@ export const useGameLoop = (
       setScore,
       gameOver,
       gameContext,
+      playAudio,
     ]
   );
 

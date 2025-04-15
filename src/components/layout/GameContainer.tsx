@@ -9,8 +9,15 @@ import GameOver from "../ui/GameOver";
 import LevelComplete from "../ui/LevelComplete";
 
 const GameContainer = () => {
-  const { gameStatus, setGameStatus, startGame, pauseGame, resumeGame } =
-    useGameState();
+  const {
+    gameStatus,
+    setGameStatus,
+    startGame,
+    pauseGame,
+    resumeGame,
+    playAudio,
+    stopAudio,
+  } = useGameState();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -25,6 +32,19 @@ const GameContainer = () => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [gameStatus, pauseGame]);
+
+  // Play appropriate music based on game status
+  useEffect(() => {
+    if (gameStatus === "playing") {
+      // Play game background music when playing
+      playAudio("gameBackground");
+    } else if (gameStatus === "menu") {
+      // Play main theme when in menu
+      playAudio("mainTheme");
+    }
+
+    // No need to handle other states as they have their own audio logic
+  }, [gameStatus, playAudio]);
 
   return (
     <div className="min-h-screen bg-dark flex items-center justify-center p-4">

@@ -27,6 +27,9 @@ const LevelComplete: React.FC = () => {
     if (gameState.gameStatus === "levelComplete") {
       setVisible(true);
 
+      // Play a gem collection sound to celebrate level completion
+      gameState.playAudio("gemCollect");
+
       // Count collected items
       const collectedCoins = gameState.collectibles.filter(
         (c) => c.collected && c.type === "gem"
@@ -81,6 +84,9 @@ const LevelComplete: React.FC = () => {
   if (!visible) return null;
 
   const handleNextLevel = () => {
+    // Play button sound
+    gameState.playAudio("gemCollect");
+
     // The current level number should already be updated in the levelComplete callback
     // Initialize the next level (which was already set in the GameContext)
     gameState.initLevel(gameState.level);
@@ -89,12 +95,18 @@ const LevelComplete: React.FC = () => {
   };
 
   const handleReplayLevel = () => {
+    // Play button sound
+    gameState.playAudio("gemCollect");
+
     // Reset and restart the current level
     gameState.initGame();
     gameState.startGame();
   };
 
   const handleMainMenu = () => {
+    // Play button sound
+    gameState.playAudio("gemCollect");
+
     // Go back to the main menu
     gameState.setGameStatus("menu");
     router.push("/");

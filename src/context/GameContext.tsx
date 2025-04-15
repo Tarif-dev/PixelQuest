@@ -7,6 +7,7 @@ import {
   useMemo,
 } from "react";
 import { GameStatus, Player, World, Collectible, Enemy } from "../types/game";
+import { useAudio } from "../hooks/useAudio";
 
 interface GameState {
   gameStatus: GameStatus;
@@ -31,12 +32,27 @@ interface GameState {
   fps: number;
   setFps: (fps: number) => void;
   initGame: () => void;
-  initLevel: (levelNumber: number) => void; // Add this to expose the initLevel function
+  initLevel: (levelNumber: number) => void;
   startGame: () => void;
   pauseGame: () => void;
   resumeGame: () => void;
   gameOver: () => void;
   levelComplete: () => void;
+  // Audio functionality
+  playAudio: (
+    type: "gameBackground" | "gameOver" | "gemCollect" | "mainTheme"
+  ) => void;
+  stopAudio: (
+    type: "gameBackground" | "gameOver" | "gemCollect" | "mainTheme"
+  ) => void;
+  pauseAudio: (
+    type: "gameBackground" | "gameOver" | "gemCollect" | "mainTheme"
+  ) => void;
+  stopAllAudio: () => void;
+  musicVolume: number;
+  sfxVolume: number;
+  setMusicVolume: (volume: number) => void;
+  setSfxVolume: (volume: number) => void;
 }
 
 export const GameContext = createContext<GameState | undefined>(undefined);
@@ -70,6 +86,18 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [health, setHealth] = useState(100);
   const [loading, setLoading] = useState(true);
   const [fps, setFps] = useState(60);
+
+  // Audio state
+  const {
+    playAudio,
+    stopAudio,
+    pauseAudio,
+    stopAllAudio,
+    musicVolume,
+    sfxVolume,
+    setMusicVolume,
+    setSfxVolume,
+  } = useAudio();
 
   // Use useMemo to calculate hasNextLevel dynamically based on current level
   const hasNextLevel = useMemo(() => level < 5, [level]);
@@ -1272,6 +1300,14 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         resumeGame,
         gameOver,
         levelComplete,
+        playAudio,
+        stopAudio,
+        pauseAudio,
+        stopAllAudio,
+        musicVolume,
+        sfxVolume,
+        setMusicVolume,
+        setSfxVolume,
       }}
     >
       {children}
